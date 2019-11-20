@@ -1,0 +1,88 @@
+public class Mains {
+    static Scanner console = new Scanner(System.in);
+
+    // Navigation options array
+    // i'm guessing this will be shared between spin and tof
+    static String[] navigateGame = {"start", "back"};
+
+    public static void main (String[] args) {
+        String[] content = { "spin", "tof" };
+        while (true) {
+            printGameMenu(content);
+            String choice = getChoice(content);
+
+            switch (choice) {
+                case "spin":
+                    spinGame();
+                    break;
+                /* once you implement the TOF game...
+                case "tof":
+                    tofGame();
+                    break;
+                */
+                default:
+                    System.out.println("Could not find game!");
+                    break;
+            }
+        }
+    }
+
+    public static void printGameMenu(String[] content) {
+        System.out.print("Welcome! Please select a game: ");
+        for (int i = 0; i < content.length; i++) {
+            System.out.print(content[i]);
+            if (i < content.length -1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println();
+    }
+
+
+    public static String getChoice(String[] options)
+    {
+        do {
+            String inputString = console.nextLine();
+
+            for (String s : options) {
+                if (inputString.equalsIgnoreCase(s)) {
+
+                    // BTW...rereading this Q&A, i noticed something.  In your code,
+                    // when you've found a match, you use `inputString` -- the string
+                    // entered by the user -- and you don't know whether it's
+                    // lowercase.  This means even though you've found a match, it
+                    // might not match any of your `switch` cases.
+                    //
+                    // The string in your options array is more under your control.
+                    // You should probably either use that or stop trying to be
+                    // case-agnostic, since it probably isn't working anyway.
+
+                    return s;
+                }
+            }
+            System.out.println("Invalid option.  Please choose from the listed options.");
+        } while (true);
+    }
+
+    public static void spinGame()
+    {
+        Spin spin = new Spin();
+        System.out.println("Welcome to the spin game!");
+        System.out.println("Please enter 'start' to start and 'back' to go back.");
+
+        while (true) {
+            String inputString = getChoice(navigateGame);
+
+            switch (inputString) {
+                case "start":
+                    System.out.println(spin.spinWheel());
+                    break;
+                case "back":
+                    return;
+                default:
+                    // this should never happen
+                    throw new RuntimeException("Unexpected: '" + inputString + "'");
+            }
+        }
+    }
+}
